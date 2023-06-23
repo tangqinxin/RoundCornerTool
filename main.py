@@ -1,31 +1,32 @@
-# from PIL import Image, ImageDraw
-#
-# # Create a new image with black background
-# img = Image.new('RGB', (1080, 2504), color = 'black')
-#
-# # Create a mask with rounded corners
-# mask = Image.new('L', (1080, 2504), 0)
-# draw = ImageDraw.Draw(mask)
-# draw.pieslice([(0, 0), (200, 200)], 180, 270, fill=255)
-# draw.pieslice([(0, 2504-200), (200, 2504)], 90, 180, fill=255)
-# draw.pieslice([(1080-200, 0), (1080, 200)], 270, 360, fill=255)
-# draw.pieslice([(1080-200, 2504-200), (1080, 2504)], 0, 90, fill=255)
-#
-# # Apply the mask to the image
-# img.putalpha(mask)
-#
-# # Save the image as PNG format
-# img.save('image.png')
-
 from PIL import Image, ImageDraw
+width = 1080
+height = 2504
+radius = 100
+# Create a new image with black background
+img = Image.new('RGB', (width, height), color = 'black') # 底板为纯黑图
 
-img = Image.new('RGB', (200, 200), color = 'white')
+# Create a mask with rounded corners
+mask = Image.new('L', (width, height), 0)
+draw = ImageDraw.Draw(mask)
+# 左上
+draw.rectangle((0, 0, radius, radius), fill ='white') # 矩形透明度最高
+draw.pieslice([(0, 0), (2*radius, 2*radius)], 180, 270, fill=0) # 去除边缘
+# 右上
+draw.rectangle((width - radius, 0, width, radius), fill ='white') # 矩形透明度最高
+draw.pieslice([(width-2*radius, 0), (width, 2*radius)], 270, 360, fill=0)
+# 左下
+draw.rectangle((0, height - radius, radius, height), fill ='white') # 矩形透明度最高
+draw.pieslice([(0, height-2*radius), (2*radius, height)], 90, 180, fill=0)
+# 右下
+draw.rectangle((width - radius, height - radius, width, height), fill ='white') # 矩形透明度最高
+draw.pieslice([(width-2*radius, height-2*radius), (width, height)], 0, 90, fill=0)
 
-# 创建一个ImageDraw对象
-draw = ImageDraw.Draw(img)
+# Apply the mask to the image
+img.putalpha(mask)
 
-# 绘制矩形
-draw.rectangle((50, 50, 150, 150), fill ='black')
+# Save the image as PNG format
+img.save('image.png')
 
-# 显示图像
-img.show()
+print('width =', width, 'height =', height, 'radius =', radius)
+
+
